@@ -1,0 +1,44 @@
+- hosts: 127.0.0.1
+  connection: local
+
+  vars:
+    ebms_version: 2.17.3
+    workdir: ~/ebms-adapter-demo/digipoort/
+
+  tasks:
+    - name: Ensure openjdk-8 is installed
+      apt:
+        name: openjdk-8-jre
+        state: present
+      become: yes
+    - name: Create work directory if it does not exist
+      file:
+        path: "{{ workdir }}"
+        state: directory
+        mode: '0755'
+    - name: Download application
+      get_url:
+        url: https://github.com/eluinstra/ebms-admin/releases/download/ebms-admin-{{ ebms_version }}/ebms-admin-{{ ebms_version }}.jar
+        dest: "{{ workdir }}ebms-admin-{{ ebms_version }}.jar"
+        backup: true
+    # - name: Create startup file
+    #   shell: |
+    #     printf '#!/bin/sh
+    #     java -cp ebms-admin-{{ ebms_version }}.jar nl.clockwork.ebms.admin.StartEmbedded -hsqldb -soap' > {{ workdir }}start.sh
+    #   args:
+    #     creates: "{{ workdir }}start.sh"
+    # - name: Make startup file executable
+    #   file:
+    #     path: "{{ workdir }}start.sh"
+    #     state: touch
+    #     mode: u+x
+    - name: Create properties file
+      shell: |
+        printf 'https.verifyHostnames=false
+        ebms.jdbc.update=true' > {{ workdir }}ebms-admin.embedded.properties
+      args:
+        creates: "{{ workdir }}ebms-admin.embedded.properties"
+    - name: Start application
+      shell: "java -cp ebms-admin-{{ ebms_version }}.jar nl.clockwork.ebms.admin.StartEmbedded -hsqldb -soap"
+      args:
+        chdir: "{{ workdir }}" 
