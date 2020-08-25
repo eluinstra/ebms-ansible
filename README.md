@@ -1,11 +1,14 @@
-Run example:  
-cd examples/digipoort  
-ansible-playbook playbook.yml --ask-become-pass  
-cd examples/demo/overheid  
-ansible-playbook playbook.yml --ask-become-pass  
+Run example:
+
+```
+cd examples/digipoort
+ansible-playbook playbook.yml --ask-become-pass
+cd examples/demo/overheid
+ansible-playbook playbook.yml --ask-become-pass
+```
 
 open http://localhost:8080/wicket/bookmarkable/nl.clockwork.ebms.admin.web.service.cpa.CPAsPage in your browser and upload cpa examples/cpa.xml  
-open http://localhost:8000/wicket/bookmarkable/nl.clockwork.ebms.admin.web.service.cpa.CPAsPage in your browser and upload cpa examples/cpa.xml  
+open http://localhost:8000/wicket/bookmarkable/nl.clockwork.ebms.admin.web.service.cpa.CPAsPage in your browser and upload cpa examples/cpa.xml
 
 - next from the digipoort console you can:
 	- execute a ping the overheid adapter at http://localhost:8080/wicket/bookmarkable/nl.clockwork.ebms.admin.web.service.message.PingPage
