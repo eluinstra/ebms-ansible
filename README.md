@@ -1,6 +1,8 @@
 Run example:
 
 ```
+ansible-galaxy install geerlingguy.java
+ansible-galaxy install geerlingguy.postgresql
 cd examples/digipoort
 ansible-playbook playbook.yml --ask-become-pass
 cd examples/demo/overheid

@@ -1,28 +1,33 @@
 - hosts: 127.0.0.1
   connection: local
   roles:
+    - role: geerlingguy.java
+      become: yes
+      when: "ansible_os_family == 'Debian'"
+      java_packages:
+        - openjdk-8-jre
+    - role: geerlingguy.java
+      become: yes
+      when: "ansible_os_family == 'RedHat'"
+      java_packages:
+        - java-1.8.0-openjdk
     - role: geerlingguy.postgresql
       become: yes
+      postgresql_databases:
+        - name: ebms
+      postgresql_users:
+        - name: ebms
+          password: ebms
   vars:
-    postgresql_databases:
-      - name: ebms
-    postgresql_users:
-      - name: ebms
-        password: ebms
     ebms_version: 2.17.3
     postgres_driver: postgresql-42.2.14.jar
     workdir: ~/ebms-adapter-demo/overheid/
   tasks:
-    - name: Ensure openjdk-8 is installed
-      apt:
-        name: openjdk-8-jre
-        state: present
-      become: yes
     - name: Create work directory if it does not exist
       file:
         path: "{{ workdir }}"
         state: directory
-        mode: '0755'
+        mode: 0755
     - name: Download application
       get_url:
         url: https://github.com/eluinstra/ebms-admin/releases/download/ebms-admin-{{ ebms_version }}/ebms-admin-{{ ebms_version }}.jar
@@ -47,6 +52,6 @@
       args:
         creates: "{{ workdir }}ebms-admin.embedded.properties"
     - name: Start application
-      shell: "java -cp {{ postgres_driver }}:ebms-admin-{{ ebms_version }}.jar nl.clockwork.ebms.admin.StartEmbedded -port 8000 -ssl -soap"
+      shell: java -cp {{ postgres_driver }}:ebms-admin-{{ ebms_version }}.jar nl.clockwork.ebms.admin.StartEmbedded -port 8000 -ssl -soap
       args:
         chdir: "{{ workdir }}" 
