@@ -12,7 +12,7 @@
       java_packages:
         - java-1.8.0-openjdk
   vars:
-    ebms_version: 2.17.3
+    ebms_version: 2.17.5
     workdir: ~/ebms-adapter-demo/overheid/
   tasks:
     - name: Create work directory if it does not exist
